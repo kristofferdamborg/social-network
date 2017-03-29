@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreatePostsTable extends Migration
+class AddLiveAndPostsOnFieldsToArticles extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,9 @@ class CreatePostsTable extends Migration
      */
     public function up()
     {
-        Schema::create('posts', function (Blueprint $table) {
-            $table->increments('id');
-            $table->integer('user_id');
-            $table->text('content');
-            $table->timestamps();
+        Schema::table('articles', function (Blueprint $table) {
+            $table->boolean('live')->default(0);
+            $table->timestamp('post_on')->nullable();
         });
     }
 
@@ -28,6 +26,8 @@ class CreatePostsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('posts');
+        Schema::table('articles', function (Blueprint $table) {
+            $table->dropColumn(['live', 'post_on']);
+        });
     }
 }
