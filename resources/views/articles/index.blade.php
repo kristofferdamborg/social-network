@@ -14,11 +14,27 @@
                         </span>
                     </div>
                     <div class="panel-body">
-                        {{ $article->content }}
+                        {{ $article->shortContent }}
+
+                        <a href="/articles/{{ $article->id }}">Read more</a>
                     </div>
 
-                    <div style="background-color: white;" class="panel-footer clearfix">
-                        <i class="fa fa-heart pull-right"></i>
+                    <div style="background-color: white; display: flex; align-items: center; justify-content: flex-end;" class="panel-footer clearfix">
+                        
+                        <i class="fa fa-heart"></i>
+
+                        @if($article->user_id == Auth::id())
+                            <form action="/articles/{{ $article->id }}" method="POST" style="margin-left: 15px">
+                            
+                            {{ method_field('DELETE') }}
+                            {{ csrf_field() }}
+
+                                <button class="btn btn-danger btn-sm">
+                                    Delete
+                                </button>
+                            </form>
+                        @endif
+
                     </div>
                 </div>
             </div>

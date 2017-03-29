@@ -16,7 +16,7 @@ class ArticlesController extends Controller
      */
     public function index()
     {
-        $articles = Article::paginate(10);
+        $articles = Article::orderBy('id', 'desc')->paginate(10);
         //$articles = Article::whereLive(1)->get();
         //$articles = DB::table('articles')->whereLive(1)->get();
 
@@ -53,6 +53,8 @@ class ArticlesController extends Controller
         */
 
         Article::create($request->all());
+
+        return redirect('/articles');
     }
 
     /**
@@ -63,7 +65,9 @@ class ArticlesController extends Controller
      */
     public function show($id)
     {
-        //
+        $article = Article::findOrFail($id);
+
+        return view('articles.show', compact('article'));
     }
 
     /**
@@ -74,7 +78,9 @@ class ArticlesController extends Controller
      */
     public function edit($id)
     {
-        //
+        $article = Article::findOrFail($id);
+
+        return view('articles.edit', compact('article'));
     }
 
     /**
@@ -86,7 +92,14 @@ class ArticlesController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $article = Article::findOrFail($id);
+
+        if( ! isset($request->live))
+            $article->update(array_merge($request->all(), ['live' => false]));
+        else
+            $article->update($request->all());
+        
+        return redirect('/articles');
     }
 
     /**
@@ -97,6 +110,10 @@ class ArticlesController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $article = Article::findOrFail($id);
+
+        $article->delete();
+
+        return redirect('/articles');
     }
 }
